@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="global.mybatis.mapper.DivisionMapper">
+	<resultMap type="global.mybatis.dto.Division" id="DivisionMap">
+		<id  column="id" property="id" jdbcType="BIGINT" />
+		<result column="name" property="name" jdbcType="VARCHAR" />
+		<result column="status" property="status" jdbcType="VARCHAR" />
+		<result column="created_by" property="created_by" jdbcType="VARCHAR" />
+		<result column="created_date" property="created_date" jdbcType="TIMESTAMP" />
+		<result column="modified_by" property="modified_by" jdbcType="VARCHAR" />
+		<result column="modified_date" property="modified_date" jdbcType="TIMESTAMP" />
+	</resultMap>
+	
+	<select id="findDivisions" parameterType="global.mybatis.dto.Division" resultMap="DivisionMap">
+		select * from division
+		<where>
+			<if test="id != 0 and id != null">
+				id=#{id,jdbcType=BIGINT}
+			</if>
+		</where>
+	</select>
+	
+	<select id="findDivisionsNameById" parameterType="global.mybatis.dto.Division" resultMap="DivisionMap">
+		select * from division where id=#{id,jdbcType=BIGINT}
+	</select>
+	
+	<update id="updateDivisionfromId" parameterType="global.mybatis.dto.Division">
+		update division
+		set 
+		<if test="name != null and name != ''">name=#{name,jdbcType=VARCHAR},</if>
+		<if test="status != null and status != ''">status=#{status,jdbcType=VARCHAR},</if>
+		<if test="modified_by != null and modified_by != ''">modified_by=#{modified_by,jdbcType=VARCHAR},</if>
+		<if test="modified_date != null">modified_date=#{modified_date,jdbcType=TIMESTAMP}</if>
+		where id=#{id,jdbcType=BIGINT}
+	</update>
+	
+	<delete id="deleteDivisionfromId" parameterType="global.mybatis.dto.Division">
+		delete from division where id=#{id,jdbcType=BIGINT}
+	</delete>
+	
+	<insert id="addDivision" parameterType="global.mybatis.dto.Division">
+		insert into division(name,status,created_by,created_date,modified_by,modified_date)
+		values(
+			#{name,jdbcType=VARCHAR},
+			#{status,jdbcType=VARCHAR},
+			#{created_by,jdbcType=VARCHAR},
+			#{created_date,jdbcType=TIMESTAMP},
+			#{modified_by,jdbcType=VARCHAR},
+			#{modified_date,jdbcType=TIMESTAMP}
+		)
+	</insert>
+</mapper>

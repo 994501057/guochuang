@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="global.mybatis.mapper.AuditMapper">
+	<resultMap type="global.mybatis.dto.Audit" id="AuditMap">
+		<id  column="id" property="id" jdbcType="BIGINT" />
+		<result column="audit_id" property="audit_id" jdbcType="BIGINT" />
+		<result column="user_id" property="user_id" jdbcType="BIGINT" />
+		<result column="result" property="result" jdbcType="VARCHAR" />
+		<result column="remark" property="remark" jdbcType="VARCHAR" />
+		<result column="time" property="time" jdbcType="DATE"/>
+		<result column="created_by" property="created_by" jdbcType="VARCHAR" />
+		<result column="created_date" property="created_date" jdbcType="TIMESTAMP" />
+		<result column="modified_by" property="modified_by" jdbcType="VARCHAR" />
+		<result column="modified_date" property="modified_date" jdbcType="TIMESTAMP" />
+	</resultMap>
+	
+	<select id="findAuditfromAudit_Id" parameterType="global.mybatis.dto.Audit" resultMap="AuditMap">
+		select * from audit where audit_id=#{audit_id,jdbcType=BIGINT}
+	</select>
+	
+	<select id="findAuditfromId" parameterType="global.mybatis.dto.Audit" resultMap="AuditMap">
+		select * from audit where id=#{id,jdbcType=BIGINT}
+	</select>
+	
+	<insert id="addAudit" parameterType="global.mybatis.dto.Audit">
+		insert into audit(audit_id, user_id, result, remark, time, created_by, created_date, modified_by, modified_date)
+		values(
+			#{audit_id,jdbcType=BIGINT},
+			#{user_id,jdbcType=BIGINT},
+			#{result,jdbcType=VARCHAR},
+			#{remark,jdbcType=VARCHAR},
+			#{time,jdbcType=DATE},
+			#{created_by,jdbcType=VARCHAR},
+			#{created_date,jdbcType=TIMESTAMP},
+			#{modified_by,jdbcType=VARCHAR},
+			#{modified_date,jdbcType=TIMESTAMP}
+		)
+	</insert>
+	
+	<update id="updateAudit" parameterType="global.mybatis.dto.Audit">
+		update dictionary
+		set 
+		<if test="user_id != 0">user_id=#{user_id,jdbcType=BIGINT},</if>
+		<if test="result != null and result != ''">name=#{name,jdbcType=VARCHAR},</if>
+		<if test="remark != null and remark != ''">remark=#{remark,jdbcType=VARCHAR},</if>
+		<if test="time != null and time != ''">time=#{time,jdbcType=DATE},</if>
+		<if test="modified_by != null and modified_by != ''">modified_by=#{modified_by,jdbcType=VARCHAR},</if>
+		<if test="modified_date != null and modified_date != ''">modified_date=#{modified_date,jdbcType=TIMESTAMP}</if>
+		where audit_id={audit_id,jdbcType=BIGINT}
+	</update>
+	
+	<delete id="deleteAuditsByAudit_id" parameterType="global.mybatis.dto.Audit">
+		delete from audit where audit_id=#{audit_id,jdbcType=BIGINT}
+	</delete>
+</mapper>

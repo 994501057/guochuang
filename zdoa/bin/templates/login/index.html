@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>登录-蓝创TPM管理系统</title>
+    <link rel="stylesheet" href="/static/css/login.css">
+    <script src="/static/js/jquery-3.3.1.min.js"></script>
+</head>
+<body>
+ 	<div class="login_wrap">
+ 		<div class="login_login">
+ 			<img src="/static/images/loginlogo.png" alt="logo">
+ 		</div>
+ 		<form id="indexform" name="indexForm" action="/login" method="post">
+ 			<span><img src="/static/images/login_btn.png"></span><input type="text" id="sn" name="sn" placeholder="请输入用户名称"><br/>
+ 			<span><img src="/static/images/pwdbtn.png"></span><input type="password" id="password" name="password" placeholder="请输入登录密码">
+ 			<label id="info_tip">${message!}</label>
+ 			<button type="submit" id="submit">登&nbsp;&nbsp;&nbsp;&nbsp;录</button>
+ 		</form>
+ 	</div>
+</body>
+</html>

@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="global.mybatis.mapper.Project_tableMapper">
+	<resultMap type="global.mybatis.dto.Project_table" id="Project_tableMap">
+		<id  column="id" property="id" jdbcType="BIGINT" />
+		<result column="name" property="name" jdbcType="VARCHAR" />
+		<result column="dictionary_id" property="dictionary_id" jdbcType="BIGINT" />
+		<result column="startdate" property="startdate" jdbcType="TIMESTAMP" />
+		<result column="enddate" property="enddate" jdbcType="TIMESTAMP" />
+		<result column="clientname" property="clientname" jdbcType="VARCHAR"/>
+		<result column="trade" property="trade" jdbcType="VARCHAR" />
+		<result column="type" property="type" jdbcType="VARCHAR" />
+		<result column="amount" property="amount" jdbcType="DECIMAL" />
+		<result column="tex" property="tex" jdbcType="DECIMAL" />
+		<result column="contact" property="contact" jdbcType="VARCHAR" />
+		<result column="phone" property="phone" jdbcType="VARCHAR" />
+		<result column="user_id" property="user_id" jdbcType="BIGINT" />
+		<result column="status" property="status" jdbcType="VARCHAR" />
+		<result column="createdBy" property="created_by" jdbcType="VARCHAR" />
+		<result column="createdDate" property="created_date" jdbcType="TIMESTAMP" />
+		<result column="modifiedBy" property="modified_by" jdbcType="VARCHAR" />
+		<result column="modifiedDate" property="modified_date" jdbcType="TIMESTAMP" />
+	</resultMap>
+	<select id="findProject_tables"  resultMap="Project_tableMap">
+		SELECT a.*, b.username from project_tanle a left join user b on a.user_id =  b.id 
+		</select>		
+	<select id="findProject_table"  resultType="java.lang.Integer">
+		select count(*) from  project_table
+	</select>	
+	<select id="findProject_table" parameterType="global.mybatis.dto.Project_table" resultMap="Project_tableMap">
+		select * from project_table
+		<where>
+			<if test="id != 0 and id != null">
+				id=#{id,jdbcType=BIGINT}
+			</if>
+			<if test="name != null and name != ''">
+				 name LIKE CONCAT('%',#{name,jdbcType=VARCHAR},'%')
+			</if>
+		</where>
+	</select>	
+	<select id="findProject_tableById" parameterType="global.mybatis.dto.Project_table" resultMap="Project_tableMap">
+		select * from project_table where id=#{id,jdbcType=BIGINT}
+	</select>	
+	<insert id="saveProject_table" parameterType="global.mybatis.dto.Project_table">
+		insert into project_table(name, dictionary_id, startdate, enddate, clientname, 
+		trade, type, amount,tex,contact,phone,user_id,status,created_by,created_date,modified_by,modified_date)
+		values(
+			#{name,jdbcType=VARCHAR},
+			#{dictionary_id,jdbcType=BIGINT},
+			#{startdate,jdbcType=TIMESTAMP},
+			#{enddate,jdbcType=TIMESTAMP},
+			#{clientname,jdbcType=VARCHAR},
+			#{trade,jdbcType=VARCHAR},
+			#{type,jdbcType=VARCHAR},
+			#{amount,jdbcType=DECIMAL},	
+			#{tex,jdbcType=DECIMAL},
+			#{contact,jdbcType=VARCHAR},
+			#{phone,jdbcType=VARCHAR},
+			#{user_id,jdbcType=BIGINT},
+			#{status,jdbcType=VARCHAR},	
+			#{createdBy,jdbcType=VARCHAR},
+			#{createdDate,jdbcType=TIMESTAMP},
+			#{modifiedBy,jdbcType=VARCHAR},
+			#{modifiedDate,jdbcType=TIMESTAMP}
+		)
+	</insert>	
+	<update id="update" parameterType="global.mybatis.dto.Project_table">
+		update project_table
+		set
+		<if test="id!=0 and id!=''"></if> 		
+		<if test="name != null">name=#{name,jdbcType=VARCHAR},</if>
+		<if test="dictionary_id != null">dictionary_id=#{dictionary_id,jdbcType=VARCHAR},</if>
+		<if test="startdate != null">startdate=#{startdate,jdbcType=TIMESTAMP},</if>
+		<if test="enddate != null">enddate=#{enddate,jdbcType=TIMESTAMP},</if>
+		<if test="clientname != null">clientname=#{clientname,jdbcType=VARCHAR},</if>
+		<if test="trade != 0">trade=#{trade,jdbcType=VARCHAR},</if>
+		<if test="type != null">type=#{type,jdbcType=VARCHAR},</if>
+		<if test="amount != null">amount=#{amount,jdbcType=DECIMAL},</if>
+		<if test="tex != null">tex=#{tex,jdbcType=DECIMAL},</if>
+		<if test="contact != null">contact=#{contact,jdbcType=VARCHAR},</if>
+		<if test="phone != null">phone=#{phone,jdbcType=VARCHAR},</if>		
+		<if test="user_id != 0">user_id=#{user_id,jdbcType=BIGINT},</if>
+		<if test="status != null">status=#{status,jdbcType=VARCHAR},</if>
+		<if test="createdBy != null">created_by=#{createdBy,jdbcType=VARCHAR},</if>
+		<if test="createdDate != null ">created_date=#{createdDate,jdbcType=TIMESTAMP},</if>
+		<if test="modifiedBy != null">modified_by=#{modifiedBy,jdbcType=VARCHAR},</if>
+		<if test="modifiedDate != null">modified_date=#{modifiedDate,jdbcType=TIMESTAMP}</if>
+		where id=#{id,jdbcType=BIGINT}
+	</update>
+	<delete id="deleteProject" parameterType="java.lang.Long">
+		delete from project_table where id=#{id,jdbcType=BIGINT}
+	</delete>
+</mapper>

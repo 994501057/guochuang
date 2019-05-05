@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="global.mybatis.mapper.Audit_userMapper">
+	<resultMap type="global.mybatis.dto.Audit_user" id="Aduit_userMap">
+		<id  column="id" property="id" jdbcType="BIGINT" />
+		<result column="division_id" property="division_id" jdbcType="BIGINT" />
+		<result column="user_id" property="user_id" jdbcType="BIGINT" />
+		<result column="level" property="level" jdbcType="INTEGER" />
+		<result column="type" property="type" jdbcType="VARCHAR" />
+		<result column="created_by" property="created_by" jdbcType="VARCHAR" />
+		<result column="created_date" property="created_date" jdbcType="TIMESTAMP" />
+		<result column="modified_by" property="modified_by" jdbcType="VARCHAR" />
+		<result column="modified_date" property="modified_date" jdbcType="TIMESTAMP" />
+	</resultMap>
+	
+	<select id="findAudit_userByDivision_idAndTypeAndUser_id" parameterType="java.util.List" resultMap="Aduit_userMap">
+		select * from audit_user 
+		<where>
+			<if test="division_id!=0">division_id=#{division_id,jdbcType=BIGINT},</if>
+			<if test="user_id != 0">user_id=#{user_id,jdbcType=BIGINT},</if>
+			<if test="type != null and type != ''">type=#{type,jdbcType=VARCHAR}</if>
+		</where>
+	</select>
+	
+	<select id="findAudit_userById" parameterType="global.mybatis.dto.Audit_user" resultMap="Aduit_userMap">
+		select * from audit_user where id=#{id,jdbcType=BIGINT}
+	</select>
+	
+	<insert id="addAudit_user" parameterType="global.mybatis.dto.Audit_user">
+		insert into audit_user(division_id,user_id,level，created_by,created_date)
+		values(
+			#{division_id,jdbcType=BIGINT},
+			#{user_id,jdbcType=BIGINT},
+			#{created_by,jdbcType=VARCHAR},
+			#{created_date,jdbcType=TIMESTAMP},
+		)
+	</insert>
+	
+	<update id="updateAudit_user" parameterType="global.mybatis.dto.Audit_user">
+		update audit_user
+		set 
+		<if test="division_id!=0">division_id=#{division_id,jdbcType=BIGINT},</if>
+		<if test="user_id != 0">user_id=#{user_id,jdbcType=BIGINT},</if>
+		<if test="level != 0">level=#{level,jdbcType=INTEGER},</if>
+		<if test="type != null and type != ''">type=#{type,jdbcType=VARCHAR},</if>
+		<if test="modified_by != null and modified_by != ''">modified_by=#{modified_by,jdbcType=VARCHAR},</if>
+		<if test="modified_date != null and modified_date != ''">modified_date=#{modified_date,jdbcType=TIMESTAMP}</if>
+		where id={id,jdbcType=BIGINT}
+	</update>
+	
+	<delete id="deleteAudit_user" parameterType="global.mybatis.dto.Audit_user">
+		delete from audit_user where id=#{id,jdbcType=BIGINT}
+		<if test="id != 0">id=#{id,jdbcType=BIGINT}</if>
+		<if test="division_id!=0">division_id=#{division_id,jdbcType=BIGINT},</if>
+		<if test="user_id != 0">user_id=#{user_id,jdbcType=BIGINT},</if>
+		<if test="type != null and type != ''">type=#{type,jdbcType=VARCHAR}</if>
+	</delete>
+</mapper>

@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="global.mybatis.mapper.LeaveMapper">
+	<resultMap type="global.mybatis.dto.Leave" id="LeaveMap">
+		<id  column="id" property="id" jdbcType="BIGINT" />
+		<result column="dictionary_id" property="dictionary_id" jdbcType="BIGINT" />
+		<result column="user_id" property="user_id" jdbcType="BIGINT" />
+		<result column="remark" property="remark" jdbcType="VARCHAR" />
+		<result column="startdate" property="startdate" jdbcType="TIMESTAMP" />
+		<result column="enddate" property="enddate" jdbcType="TIMESTAMP" />
+		<result column="day" property="day" jdbcType="INTEGER" />
+		<result column="state" property="state" jdbcType="VARCHAR" />
+		<result column="created_by" property="created_by" jdbcType="VARCHAR" />
+		<result column="created_date" property="created_date" jdbcType="TIMESTAMP" />
+			<collection property="audit_user" ofType="global.mybatis.dto.Audit_user" select="selectAudit_user">
+				<result column="id" property="id" jdbcType="BIGINT" />
+				<result column="division_id" property="division_id" jdbcType="BIGINT" />
+				<result column="user_id" property="user_id" jdbcType="BIGINT" />
+				<result column="level" property="level" jdbcType="INTEGER" />
+				<result column="type" property="type" jdbcType="VARCHAR" />
+				<result column="created_by" property="created_by" jdbcType="VARCHAR" />
+				<result column="created_date" property="created_date" jdbcType="TIMESTAMP" />
+				<result column="modified_by" property="modified_by" jdbcType="VARCHAR" />
+				<result column="modified_date" property="modified_date" jdbcType="TIMESTAMP" />
+			</collection>
+	</resultMap>
+	
+	<select id="findAllLeave" parameterType="java.util.List" resultMap="LeaveMap">
+		select * from leave 
+			<where>
+				<if test="id != 0 and id != ''">
+					id=#{id,jdbcType=BIGINT}
+				</if>
+				<if test="startTime != null and startTime != ''">
+					and created_date &gt;=#{startTime,jdbcType=TIMESTAMP}
+				</if>
+				
+				<if test="endTime != null and endTime != ''">
+					and created_date &lt;=#{endTime,jdbcType=TIMESTAMP}
+				</if>
+				
+				<if test="dictionary_id != 0">
+					and dictionary_id=#{dictionary_id,jdbcType=BIGINT}
+				</if>
+				
+				<if test="name != null and name != '' ">
+					and created_by LIKE CONCAT('%',#{created_by,jdbcType=VARCHAR},'%')
+				</if>
+			</where>
+		ORDER BY id DESC 
+	</select>
+	
+	<select id="selectAudit_user" parameterType="java.util.List" resultMap="global.mybatis.dto.Audit_user">
+		select * from audit_user where division_id=#{division_id}
+	</select>
+	
+	<select id="findLeaveIdAll" parameterType="java.util.List" resultMap="LeaveMap">
+		select id from leave 
+	</select>
+	
+	<delete id="deleteLeaveById" parameterType="global.mybatis.dto.Leave">
+		delete from leave where id=#{id,jdbcType=BIGINT}
+	</delete>
+	
+	<insert id="addLeave" parameterType="global.mybatis.dto.Leave">
+		insert into division(name,status,created_by,created_date,modified_by,modified_date)
+		values(
+			#{dictionary_id,jdbcType=BIGINT},
+			<if test="remark != null and remark != ''">#{remark,jdbcType=VARCHAR},</if>
+			#{startdate,jdbcType=TIMESTAMP},
+			#{enddate,jdbcType=TIMESTAMP},
+			<if test="day != 0">#{day,jdbcType=INTEGER},</if>
+			#{created_by,jdbcType=VARCHAR},
+			#{created_date,jdbcType=TIMESTAMP}
+		)
+	</insert>
+	
+	<update id="updateLeaveById" parameterType="global.mybatis.dto.Leave">
+		update dictionary
+		set 
+		<if test="dictionary_id != 0">code=#{dictionary_id,jdbcType=BIGINT},</if>
+		<if test="remark != null and remark != ''">remark=#{remark,jdbcType=VARCHAR},</if>
+		<if test="startdate != null and startdate != ''">startdate=#{startdate,jdbcType=TIMESTAMP},</if>
+		<if test="enddate != null and enddate != ''">enddate=#{enddate,jdbcType=TIMESTAMP},</if>
+		<if test="day != null and day != ''">day=#{day,jdbcType=INTEGER}</if>
+		where id={id,jdbcType=BIGINT}
+	</update>
+</mapper>

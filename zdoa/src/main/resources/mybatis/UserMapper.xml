@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="global.mybatis.mapper.UserMapper" >
+  
+     <select id="findBySn" parameterType="java.lang.String" resultType="global.mybatis.dto.User">
+		select * from user where sn=#{sn,jdbcType=VARCHAR}
+	</select>
+  
+    <select id="findUserById" parameterType="java.lang.Long" resultType="global.mybatis.dto.User"  >
+		SELECT a.*, b.name As divisionName ,c.`name` AS roleName
+        from user a left join division b on a.division_id =  b.id  left join role c on c.user_id =a.id 
+        where a.id=#{id,jdbcType=BIGINT}
+	</select>
+  
+	<select id="findUser" parameterType="global.mybatis.dto.User" resultType="global.mybatis.dto.User" >
+		select * from user
+    </select>
+    
+     <select id="findUserBySnAndName" parameterType="global.mybatis.dto.User" resultType="global.mybatis.dto.User"  >
+		select * from user
+		<where>
+			<if test=" sn!= null and sn!=''">
+				sn=#{sn,jdbcType=VARCHAR}
+			</if>
+			<if test="username != null and username != ''">
+				AND username LIKE CONCAT(CONCAT('%',#{username,jdbcType=VARCHAR},'%'))   
+			</if>
+		</where>
+    </select>
+    
+    <select id="findUserIndex"  resultType="global.mybatis.dto.User" >
+		 SELECT a.id, a.sn ,a.inductiondate ,a.sex ,a.idcard , a.salary ,a.`password`, a.username, a.`status`, b.name AS divisionname ,c.`name` AS rolename
+         from user a left join division b on a.division_id =  b.id  left join role c on c.user_id =a.id
+    </select>
+    
+    <select id="findUserList" parameterType="java.lang.Long" resultType="global.mybatis.dto.User" >
+		select * from user where division_id=#{division_id,jdbcType=BIGINT}
+    </select>
+    
+  
+	<insert id="saveUser" parameterType="global.mybatis.dto.User">
+		  INSERT INTO user (
+		  sn ,
+		  inductionDate , 
+		  sex ,
+		  idcard , 
+		  salary ,
+		  password ,
+	      username , 
+		  status ,
+		  division_id ,
+		  created_by,
+		  created_date,
+		  modified_by,
+		  modified_date
+		)
+		VALUES
+		(
+		#{sn,jdbcType=VARCHAR},
+		#{inductionDate,jdbcType=TIMESTAMP},
+		#{sex,jdbcType=VARCHAR},
+		#{idcard,jdbcType=VARCHAR },
+		#{salary,jdbcType=DECIMAL},
+		#{password,jdbcType=VARCHAR},
+		#{username,jdbcType=VARCHAR},
+		#{status,jdbcType=VARCHAR},
+		#{division_id,jdbcType=BIGINT },
+		#{created_by,jdbcType=VARCHAR},
+		#{created_date,jdbcType=TIMESTAMP},
+		#{modified_by,jdbcType=VARCHAR},
+		#{modified_date,jdbcType=TIMESTAMP}
+		)
+	</insert>
+	
+	<select id="findUserByTotal" resultType="int">
+		select count(1) from user
+	</select>
+	
+	<update id="updateUser" parameterType="global.mybatis.dto.User">
+		update user
+		set 
+		<if test="id!=0 and id!=''"></if> 	
+		<if test="sn != null ">sn=#{sn,jdbcType=VARCHAR},</if>
+		<if test="inductionDate != null">inductionDate=#{inductionDate,jdbcType=TIMESTAMP},</if>
+		<if test="sex != null">sex=#{sex,jdbcType=VARCHAR},</if>
+		<if test="idcard != null ">idcard=#{idcard,jdbcType=VARCHAR },</if>
+		<if test="salary != null ">salary=#{salary,jdbcType=DECIMAL },</if>
+		<if test="password != null and password !=''">password=#{password,jdbcType=VARCHAR},</if>
+		<if test="username !=null">username=#{username,jdbcType=VARCHAR},</if>
+		<if test="status != null ">status=#{status,jdbcType=VARCHAR},</if>
+		<if test="division_id != null ">division_id=#{division_id,jdbcType=BIGINT },</if>
+		<if test="role_id != null">role_id=#{role_id,jdbcType=BIGINT },</if>
+		<if test="modified_by != null ">modified_by=#{modified_by ,jdbcType=VARCHAR},</if>
+		<if test="modified_date != null">modified_date=#{modified_date,jdbcType=TIMESTAMP}</if>
+		where id=#{id,jdbcType=BIGINT}
+	</update>
+    
+</mapper>
