@@ -11,6 +11,6 @@ spring:
       server:
         git:
           uri: https://github.com/994501057/guochuang
-          searchPaths: spring-cloud/helloworldConfig
+          #searchPaths: spring-cloud/helloworldConfig
   application:
     name: config-server
